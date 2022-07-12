@@ -1,5 +1,5 @@
 import { Component } from 'react'
-import { LoadMoreBtn } from "./Button";
+import { LoadMoreBtn } from "./LoadMoreBtn";
 import { SearchBar } from "./Searchbar/Searchbar";
 import { ImageGallery } from "./ImageGallery";
 import { Loader } from "./Loader/Loader";
@@ -77,7 +77,6 @@ export class App extends Component {
       
         {this.state.isLoading && <Loader/>}
 
-        {/* <Loader/>  */}
         {this.state.items.length > 0 && <LoadMoreBtn onClick={this.loadMore}/> }
         {/* <Modal/> */}
 
