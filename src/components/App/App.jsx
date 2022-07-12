@@ -1,11 +1,11 @@
 import { Component } from 'react'
-import { LoadMoreBtn } from "./LoadMoreBtn";
-import { SearchBar } from "./Searchbar/Searchbar";
-import { ImageGallery } from "./ImageGallery";
-import { Loader } from "./Loader/Loader";
-// import { Modal } from "./Modal";
+import { LoadMoreBtn } from "../LoadMoreBtn/LoadMoreBtn";
+import { SearchBar } from "../Searchbar/Searchbar";
+import { ImageGallery } from "../ImageGallery/ImageGallery";
+import { Loader } from "../Loader/Loader";
+import { Modal } from "../Modal/Modal";
 import axios from "axios";
-
+import styles from './App.module.css'
 
 
 export class App extends Component {
@@ -14,6 +14,8 @@ export class App extends Component {
     query: '',
     items: [],
     isLoading: false,
+    isModalOpen: false,
+    bigImg: '',
   }
 
   componentDidUpdate = (_, prevState) => {
@@ -22,6 +24,26 @@ export class App extends Component {
       this.fetchItems();
       
     }
+  }
+
+  onOpenModal = (bigImg) => {
+    this.setState({
+      isModalOpen: true,
+      bigImg: bigImg
+    })
+    document.addEventListener('keydown', this.handleCloseModal)
+    document.addEventListener('click', this.handleCloseModal)
+  }
+
+  
+
+  handleCloseModal = (e) => {
+    if (e.code === 'Escape' || e.target.nodeName === "DIV") {
+      this.setState({isModalOpen: false})
+      document.removeEventListener('keydown', this.handleCloseModal)
+      document.removeEventListener('click', this.handleCloseModal)
+    }
+    
   }
 
   fetchItems = async () => {
@@ -68,23 +90,27 @@ export class App extends Component {
 
   render() {
     return (
-      <>
+      
 
-  
+    <div className={styles.App}>
       <SearchBar onSubmit={this.handleSubmit}/> 
-      <ImageGallery items={this.state.items}> 
+      {this.state.isModalOpen && 
+        <Modal bigImg={this.state.bigImg} />}
+      <ImageGallery 
+        items={this.state.items}
+        onOpenModal={this.onOpenModal}> 
 
       
         {this.state.isLoading && <Loader/>}
 
         {this.state.items.length > 0 && <LoadMoreBtn onClick={this.loadMore}/> }
-        {/* <Modal/> */}
+        
 
                 
       </ImageGallery> 
           
-
-      </>
+    </div>
+      
         
     )
   }
