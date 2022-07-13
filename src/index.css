@@ -1,11 +1,9 @@
 @import-normalize; /* bring in normalize.css styles */
 
-
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-
 
 html {
   box-sizing: border-box;
@@ -38,9 +36,3 @@ img {
 ul {
   list-style-type: none;
 }
-
-
-
-
-
-
