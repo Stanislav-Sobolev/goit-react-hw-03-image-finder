@@ -15,6 +15,7 @@ export class App extends Component {
     isLoading: false,
     isModalOpen: false,
     bigImg: '',
+    error: null,
   };
 
   componentDidUpdate = (_, prevState) => {
@@ -53,10 +54,15 @@ export class App extends Component {
       .get(
         `?q=${this.state.query}&page=${this.state.page}&key=${myKey}&image_type=photo&orientation=horizontal&per_page=12`
       )
-      .then(res => {
+      .then(res =>
         this.setState(prev => ({
           items: [...prev.items, ...res.data.hits],
-        }));
+        }))
+      )
+      .catch(error => {
+        this.setState({ error: error.message });
+      })
+      .finally(() => {
         this.setState({ isLoading: false });
       });
   };
@@ -88,6 +94,13 @@ export class App extends Component {
       <div className={styles.App}>
         <SearchBar onSubmit={this.handleSubmit} />
         {this.state.isModalOpen && <Modal bigImg={this.state.bigImg} />}
+        {this.state.error && (
+          <div>
+            {this.state.error}
+            <p>Sorry, try again.</p>
+          </div>
+        )}
+
         <ImageGallery items={this.state.items} onOpenModal={this.onOpenModal}>
           {this.state.isLoading && <Loader />}
 
