@@ -4,7 +4,7 @@ import { SearchBar } from '../Searchbar/Searchbar';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { Loader } from '../Loader/Loader';
 import { Modal } from '../Modal/Modal';
-import axios from 'axios';
+import { fetchItemsWithQuery } from '../API/fetchItemsWithQuery';
 import styles from './App.module.css';
 
 export class App extends Component {
@@ -32,31 +32,19 @@ export class App extends Component {
       isModalOpen: true,
       bigImg,
     });
-    document.addEventListener('keydown', this.handleCloseModal);
-    document.addEventListener('click', this.handleCloseModal);
   };
 
-  handleCloseModal = e => {
-    if (e.code === 'Escape' || e.target.nodeName === 'DIV') {
-      this.setState({ isModalOpen: false });
-      document.removeEventListener('keydown', this.handleCloseModal);
-      document.removeEventListener('click', this.handleCloseModal);
-    }
+  handleCloseModal = () => {
+    this.setState({ isModalOpen: false });
   };
 
   fetchItems = async () => {
     this.setState({ isLoading: true });
 
-    axios.defaults.baseURL = 'https://pixabay.com/api/';
-    const myKey = '12834219-728ffad88c8528418d4b5c68f';
-
-    await axios
-      .get(
-        `?q=${this.state.query}&page=${this.state.page}&key=${myKey}&image_type=photo&orientation=horizontal&per_page=12`
-      )
+    await fetchItemsWithQuery(this.state.query, this.state.page)
       .then(res =>
         this.setState(prev => ({
-          items: [...prev.items, ...res.data.hits],
+          items: [...prev.items, ...res],
         }))
       )
       .catch(error => {
@@ -93,7 +81,12 @@ export class App extends Component {
     return (
       <div className={styles.App}>
         <SearchBar onSubmit={this.handleSubmit} />
-        {this.state.isModalOpen && <Modal bigImg={this.state.bigImg} />}
+        {this.state.isModalOpen && (
+          <Modal
+            bigImg={this.state.bigImg}
+            handleCloseModal={this.handleCloseModal}
+          />
+        )}
         {this.state.error && (
           <div>
             {this.state.error}
