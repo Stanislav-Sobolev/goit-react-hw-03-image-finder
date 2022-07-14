@@ -4,7 +4,7 @@ import { SearchBar } from '../Searchbar/Searchbar';
 import { ImageGallery } from '../ImageGallery/ImageGallery';
 import { Loader } from '../Loader/Loader';
 import { Modal } from '../Modal/Modal';
-import { fetchItemsWithQuery } from '../API/fetchItemsWithQuery';
+import { fetchItemsWithQuery } from '../../api/fetchItemsWithQuery';
 import styles from './App.module.css';
 
 export class App extends Component {
